@@ -10,14 +10,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Net.NetworkInformation;
+using Npgsql;
 
 namespace graph_to_psql
 {
     class graph
     {
         [DllImport("ODBCCP32.dll")]
-        private static extern bool SQLConfigDataSource(IntPtr parent, int request, string
-        driver, string attributes);
+        private static extern bool SQLConfigDataSource(IntPtr parent, int request, string driver, string attributes);
 
         static void Main(string[] args)
         {
@@ -385,6 +385,43 @@ namespace graph_to_psql
                     return;
                 }
             }
+        }
+
+        // todo JIorD 2019/02/17 заменить метод ExecuteTransactionIndiv на PsqlWrite
+        /// <summary>
+        /// Экспорт данных
+        /// </summary>
+        /// <param name="query">sql запрос для выполнения экспорта</param>
+        /// <see cref="http://www.npgsql.org/doc/index.html"/>
+        protected static void PsqlWrite(string query)
+        {
+            // подключение к PostgreSQL и запись данных
+            var connString = "Host=10.21.1.222;Username=BorodinAE;Password=bae^Y30;Database=technolog";
+            NpgsqlConnection conn = new NpgsqlConnection(connString);
+            try
+            {
+                Console.WriteLine("Подключение к PostgreSQL...");
+                conn.Open();
+
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+                Console.WriteLine($"Данные импортированны. Строк вставлено: {cmd.ExecuteNonQuery()}");
+            }
+            catch (Exception e)
+            {
+                // пишем лог и прокидываем экспешен выше
+                Console.WriteLine(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + " - " + e.Message);
+                File.AppendAllText(@"E:\Convert\error.txt", 
+                    $"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} - {System.Diagnostics.Process.GetCurrentProcess().ProcessName} - {e.Message}\r\n", 
+                    Encoding.UTF8
+                );
+                //throw e;
+            }
+            finally
+            {
+                conn.Close();
+                Console.WriteLine("Подключение к PostgreSQL закрыто.");
+            }
+            return;
         }
 
         /// <summary>
