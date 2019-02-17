@@ -1,0 +1,20 @@
+﻿menu:()
+
+path input:
+E:\technolog\Convert\CSVGRAPH\
+path output:
+\\10.21.1.222\import\
+path logfile:
+E:\technolog\Convert\CSVGRAPH\
+outquery file:
+E:\technolog\importgraph\outquery.txt
+inquery file:
+E:\technolog\importgraph\inquery.txt
+path import RTP1:
+D:\Temp\RTP1\GPAPH_RTP1\
+path DBF tehnograph:
+E:\! BZF\TEHNOGRAPH_DB\
+path RTP1 Graph (источник):
+\\10.21.1.204\GPAPH_RTP1\
+path RTP1 Graph (рабочий каталог):
+D:\Temp\RTP1\GPAPH_RTP1\
